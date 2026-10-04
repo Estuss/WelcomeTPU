@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>ru.tpu</groupId>
-    <artifactId>marketplace-backend</artifactId>
+    <artifactId>welcomtpu-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>marketplace-backend</name>
-    <description>Marketplace for TPU dorms</description>
+    <name>welcomtpu-backend</name>
+    <description>TPU first guide for applicants and students.</description>
 
     <properties>
         <java.version>25</java.version>

@@ -1,5 +1,5 @@
 
-package ru.tpu.marketplace.controller;
+package ru.tpu.welcomtpu.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ public class HelloController
     public Map<String, String> hello()
     {
         return Map.of(
-            "message", "Hello, Marketplace backend!", 
+            "message", "Hello, WelcomTPU backend!", 
             "status", "ok"
         );
     }

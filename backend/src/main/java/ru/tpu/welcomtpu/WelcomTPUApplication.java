@@ -1,14 +1,14 @@
 
-package ru.tpu.marketplace;
+package ru.tpu.welcomtpu;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MarketplaceApplication
+public class WelcomTPUApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(MarketplaceApplication.class, args);
+        SpringApplication.run(WelcomTPUApplication.class, args);
     }
 }

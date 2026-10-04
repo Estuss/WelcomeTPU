@@ -1,5 +1,5 @@
 
-package ru.tpu.marketplace.controller;
+package ru.tpu.welcomtpu.controller;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;

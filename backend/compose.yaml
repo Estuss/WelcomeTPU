@@ -1,21 +1,21 @@
 services:
   postgres:
     image: docker.io/library/postgres:16-alpine
-    container_name: marketplace-postgres
+    container_name: welcomtpu-postgres
     environment:
-      POSTGRES_DB: marketplace
-      POSTGRES_USER: marketplace
-      POSTGRES_PASSWORD: marketplace
+      POSTGRES_DB: welcomtpu
+      POSTGRES_USER: welcomtpu
+      POSTGRES_PASSWORD: welcomtpu
     ports:
       - "5432:5432"
     volumes:
-      - marketplace_pgdata:/var/lib/postgresql/data
+      - welcomtpu_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U marketplace -d marketplace"]
+      test: ["CMD-SHELL", "pg_isready -U welcomtpu -d welcomtpu"]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
 
 volumes:
-  marketplace_pgdata:
+  welcomtpu_pgdata:
