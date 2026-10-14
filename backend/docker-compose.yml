@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: docker.io/library/postgres:16-alpine
+    container_name: welcomtpu-postgres
+    environment:
+      POSTGRES_DB: welcomtpu
+      POSTGRES_USER: welcomtpu
+      POSTGRES_PASSWORD: welcomtpu
+    ports:
+      - "5432:5432"
+    volumes:
+      - welcomtpu_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U welcomtpu -d welcomtpu"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - welcomtpu-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: welcomtpu-backend:0.0.1-SNAPSHOT
+    container_name: welcomtpu-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/welcomtpu
+      SPRING_DATASOURCE_USERNAME: welcomtpu
+      SPRING_DATASOURCE_PASSWORD: welcomtpu
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_DOCKER_COMPOSE_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - welcomtpu-net
+
+volumes:
+  welcomtpu_pgdata:
+
+networks:
+  welcomtpu-net:
+    driver: bridge
