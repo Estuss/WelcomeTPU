@@ -142,7 +142,7 @@ Set-Cookie: access_token=<jwt>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=
 
 ### 2.6. Эндпоинты аутентификации
 
-#### `GET /auth/login`
+#### `GET /api/v1/auth/login`
 
 **Доступ:** публичный. 
 **Ответ `200 OK`:**
@@ -155,7 +155,7 @@ Set-Cookie: access_token=<jwt>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=
 
 ---
 
-#### `GET /auth/callback?code={code}&state={state}`
+#### `GET /api/v1/auth/callback?code={code}&state={state}`
 
 **Доступ:** публичный. 
 **Ответ `302 Found`:**
@@ -169,7 +169,7 @@ Set-Cookie: access_token=<jwt>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=
 
 ---
 
-#### `GET /auth/me`
+#### `GET /api/v1/auth/me`
 
 **Доступ:** админ. 
 **Ответ `200 OK`:**
@@ -187,7 +187,7 @@ Set-Cookie: access_token=<jwt>; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=
 
 ---
 
-#### `POST /auth/logout`
+#### `POST /api/v1/auth/logout`
 
 **Доступ:** админ. 
 **Ответ `204 No Content`:**
@@ -208,8 +208,6 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
 
 **Доступ:** публичный. 
 **Назначение:** список школ для главной страницы.
-
-
 
 **Query-параметры (Spring `Pageable`):**
 
@@ -272,8 +270,6 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
 
 **Доступ:** публичный. 
 **Назначение:** подборка карточек для пользователя.
-
-
 
 **Query-параметры:**
 
@@ -419,8 +415,6 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
 #### `GET /api/v1/admin/cards`
 
 **Доступ:** админ.
-
-
 
 **Query-параметры:**
 
@@ -586,8 +580,6 @@ curl -X POST 'https://welcome.tpu.ru/api/v1/admin/cards/550e8400-e29b-41d4-a716-
   "created_at": "2025-06-01T12:00:00Z"
 }
 ```
-
-
 
 **Ошибки:**
 
