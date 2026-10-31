@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 import ru.tpu.welcomtpu.dto.SchoolDto;
 import ru.tpu.welcomtpu.dto.SchoolSummaryDto;
@@ -31,9 +33,14 @@ public class SchoolController {
     public Page<SchoolSummaryDto> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "name,asc") String[] sort
+            HttpServletRequest request
     ) {
-        Sort sortSpec = toSort(sort);
+        // читаем сырой параметр: Spring Framework 7 режет значение по запятой до контроллера
+        String sort = request.getParameter("sort");
+        if (sort == null || sort.isBlank()) {
+            sort = "name,asc";
+        }
+        Sort sortSpec = toSort(new String[]{sort});
         Pageable pageable = PageRequest.of(page, Math.min(size, MAX_PAGE_SIZE), sortSpec);
 
         return schoolRepository.findAll(pageable).map(SchoolSummaryDto::from);
