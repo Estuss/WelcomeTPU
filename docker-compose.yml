@@ -32,7 +32,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/welcomtpu
       SPRING_DATASOURCE_USERNAME: welcomtpu
       SPRING_DATASOURCE_PASSWORD: welcomtpu
-      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      # TODO: заменить на none + Flyway-миграции
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
     ports:
       - "8080:8080"
@@ -45,12 +46,17 @@ services:
     networks:
       - welcomtpu-net
 
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   networks:
-  #     - welcomtpu-net
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8081:80"
+    networks:
+      - welcomtpu-net
 
 volumes:
   welcomtpu_pgdata:
