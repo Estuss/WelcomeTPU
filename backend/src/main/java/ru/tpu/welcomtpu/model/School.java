@@ -32,6 +32,11 @@ public class School {
     @Column(name = "official_site_url", length = 1024)
     private String officialSiteUrl;
 
+    /** Иконка школы (файл в assets). */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "icon_asset_id")
+    private Asset icon;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

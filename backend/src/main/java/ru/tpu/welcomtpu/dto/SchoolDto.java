@@ -14,6 +14,7 @@ public record SchoolDto(
         @JsonProperty("short_description") String shortDescription,
         @JsonProperty("full_description") String fullDescription,
         @JsonProperty("official_site_url") String officialSiteUrl,
+        AssetRefDto icon,
         @JsonProperty("created_at") Instant createdAt,
         @JsonProperty("updated_at") Instant updatedAt
 ) {
@@ -24,6 +25,7 @@ public record SchoolDto(
                 s.getShortDescription(),
                 s.getFullDescription(),
                 s.getOfficialSiteUrl(),
+                AssetRefDto.from(s.getIcon()),
                 s.getCreatedAt(),
                 s.getUpdatedAt());
     }
