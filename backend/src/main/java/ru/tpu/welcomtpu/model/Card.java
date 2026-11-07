@@ -75,4 +75,10 @@ public class Card {
 
     @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private StatisticDetail statisticDetails;
+
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PersonDetail personDetails;
+
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private MediaDetail mediaDetails;
 }

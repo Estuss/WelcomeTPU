@@ -226,7 +226,8 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
       "id": 1,
       "name": "Инженерная школа информационных технологий и робототехники",
       "short_description": "Готовит специалистов в области ИТ и робототехники",
-      "official_site_url": "https://it.tpu.ru"
+      "official_site_url": "https://it.tpu.ru",
+      "icon": { "id": "sha256abc", "url": "/assets/sha256abc.png", "alt_text": "Логотип школы" }
     }
   ],
   "pageable": { "pageNumber": 0, "pageSize": 20, "sort": { "sorted": true, "unsorted": false, "empty": false } },
@@ -255,6 +256,7 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
   "short_description": "...",
   "full_description": "...",
   "official_site_url": "https://it.tpu.ru",
+  "icon": { "id": "sha256abc", "url": "/assets/sha256abc.png", "alt_text": "Логотип школы" },
   "created_at": "2025-01-01T10:00:00Z",
   "updated_at": "2025-01-01T10:00:00Z"
 }
@@ -276,7 +278,7 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
 | Параметр    | Тип  | Обязательно | Описание                                                                                                 |
 | ----------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------- |
 | `school_id` | long | нет         | Не передан -> карточки "ТПУ в целом" (`school_id IS NULL`). Передан -> карточки школы                    |
-| `type`      | enum | нет         | `FACT`, `EVENT`, `STATISTIC`. Без фильтра — все                                                          |
+| `type`      | enum | нет         | `FACT`, `EVENT`, `STATISTIC`, `PERSON`, `MEDIA`. Без фильтра — все                                                          |
 | `seed`      | UUID | нет         | Seed для перемешивания сортировки (см. ниже). Не передан -> бэк генерирует `UUID.randomUUID()` только для этого запроса и возвращает его в заголовке ответа `X-Seed` |
 
 **Сортировка подборки:** не случайная (`random()` PostgreSQL не используется). Порядок строк задаётся детерминированным выражением `md5(id::text || '-' || seed)` — фактически псевдослучайное, но воспроизводимое перемешивание: один и тот же `seed` всегда возвращает одинаковую выборку в одинаковом порядке. Это позволяет клиенту передавать `seed` для стабильной последовательности при пагинации.

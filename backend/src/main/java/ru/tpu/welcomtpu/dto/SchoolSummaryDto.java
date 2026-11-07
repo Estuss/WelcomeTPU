@@ -10,13 +10,15 @@ public record SchoolSummaryDto(
         Long id,
         String name,
         @JsonProperty("short_description") String shortDescription,
-        @JsonProperty("official_site_url") String officialSiteUrl
+        @JsonProperty("official_site_url") String officialSiteUrl,
+        AssetRefDto icon
 ) {
     public static SchoolSummaryDto from(School s) {
         return new SchoolSummaryDto(
                 s.getId(),
                 s.getName(),
                 s.getShortDescription(),
-                s.getOfficialSiteUrl());
+                s.getOfficialSiteUrl(),
+                AssetRefDto.from(s.getIcon()));
     }
 }
