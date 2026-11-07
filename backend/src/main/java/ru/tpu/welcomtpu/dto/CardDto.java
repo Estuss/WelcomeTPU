@@ -15,8 +15,8 @@ public record CardDto(
         @JsonProperty("published_at") java.time.Instant publishedAt,
         List<SourceDto> sources,
         List<AssetRefDto> images,
-        EventDetailsDto eventDetails,
-        StatisticDetailsDto statisticDetails,
+        @JsonProperty("event_details") EventDetailsDto eventDetails,
+        @JsonProperty("statistic_details") StatisticDetailsDto statisticDetails,
         @JsonProperty("person_details") PersonDetailsDto personDetails,
         @JsonProperty("media_details") MediaDetailsDto mediaDetails
 ) {

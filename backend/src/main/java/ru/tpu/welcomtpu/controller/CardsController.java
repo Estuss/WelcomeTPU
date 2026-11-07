@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.tpu.welcomtpu.dto.CardDto;
@@ -21,6 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardsController {
 
+    // открытие сессии на время маппинга ленивых связей (open-in-view выключен)
+
     private static final Set<String> ALLOWED_TYPES = Set.of("FACT", "EVENT", "STATISTIC", "PERSON", "MEDIA");
     private static final int DEFAULT_PAGE_SIZE = 50;
     private static final int MAX_PAGE_SIZE = 1000;
@@ -36,6 +39,7 @@ public class CardsController {
      *                 и возвращается в заголовке X-Seed
      */
     @GetMapping
+    @Transactional(readOnly = true)
     public org.springframework.http.ResponseEntity<Page<CardDto>> list(
             @RequestParam(name = "school_id", required = false) Long schoolId,
             @RequestParam(required = false) String type,
@@ -62,6 +66,7 @@ public class CardsController {
      * GET /api/v1/cards/{id} — одна опубликованная карточка, 404 иначе.
      */
     @GetMapping("/{id}")
+    @Transactional(readOnly = true)
     public CardDto get(@PathVariable UUID id) {
         Card card = cardRepository.findById(id)
                 .filter(c -> c.getPublishedAt() != null)
