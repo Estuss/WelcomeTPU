@@ -1,0 +1,498 @@
+{
+  "info": {
+    "_postman_id": "27f9c50e-82db-408f-a259-3fe374c321a5",
+    "name": "Welcome TPU — API школ",
+    "description": "Автотесты эндпоинта GET /api/v1/schools/{id}.\nЗапускать целиком, по порядку: первый запрос сам находит id школы для остальных.\nАдрес сервера задаётся переменной baseUrl.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Школа по id — позитивные",
+      "item": [
+        {
+          "name": "Школа по id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/{{schoolId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "{{schoolId}}"
+              ]
+            },
+            "description": "Перед запросом берёт id первой школы из GET /api/v1/schools?size=1 и сохраняет его в переменную schoolId."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// берём id первой школы из списка, чтобы не вписывать его вручную",
+                  "pm.sendRequest({",
+                  "    url: pm.collectionVariables.get(\"baseUrl\") + \"/api/v1/schools?size=1\",",
+                  "    method: \"GET\",",
+                  "    header: { \"Accept\": \"application/json\" }",
+                  "}, (err, res) => {",
+                  "    if (err || res.code !== 200) {",
+                  "        console.log(\"Не удалось получить список школ:\", err || res.code);",
+                  "        pm.collectionVariables.set(\"schoolId\", \"\");",
+                  "        return;",
+                  "    }",
+                  "    const content = res.json().content || [];",
+                  "    if (content.length === 0) {",
+                  "        console.log(\"В БД нет школ.\");",
+                  "        pm.collectionVariables.set(\"schoolId\", \"\");",
+                  "        return;",
+                  "    }",
+                  "    const s = content[0];",
+                  "    pm.collectionVariables.set(\"schoolId\", s.id);",
+                  "    pm.collectionVariables.set(\"schoolName\", s.name);",
+                  "    pm.collectionVariables.set(\"schoolShort\", s.short_description === null ? \"null\" : s.short_description);",
+                  "    pm.collectionVariables.set(\"schoolUrl\", s.official_site_url === null ? \"null\" : s.official_site_url);",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"schoolId\")) {",
+                  "    pm.test.skip(\"Школа не найдена в БД, проверки пропущены\", () => {});",
+                  "} else {",
+                  "",
+                  "pm.test(\"Статус 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test(\"Ответ в формате JSON\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\"));",
+                  "const s = pm.response.json();",
+                  "pm.test(\"Есть все поля из документации\", () => {",
+                  "    pm.expect(s).to.include.all.keys(\"id\", \"name\", \"short_description\", \"full_description\",",
+                  "        \"official_site_url\", \"created_at\", \"updated_at\");",
+                  "});",
+                  "pm.test(\"id совпадает с запрошенным\", () => pm.expect(s.id).to.eql(Number(pm.collectionVariables.get(\"schoolId\"))));",
+                  "pm.test(\"name не пустой\", () => pm.expect(s.name).to.be.a(\"string\").and.not.empty);",
+                  "pm.test(\"full_description заполнено\", () => pm.expect(s.full_description).to.be.a(\"string\").and.not.empty);",
+                  "pm.test(\"created_at и updated_at в формате даты ISO 8601\", () => {",
+                  "    const iso = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$/;",
+                  "    pm.expect(s.created_at).to.match(iso);",
+                  "    pm.expect(s.updated_at).to.match(iso);",
+                  "});",
+                  "pm.test(\"updated_at не раньше created_at\", () => {",
+                  "    pm.expect(new Date(s.updated_at).getTime()).to.be.at.least(new Date(s.created_at).getTime());",
+                  "});",
+                  "pm.test(\"official_site_url начинается с http (если заполнено)\", () => {",
+                  "    if (s.official_site_url !== null) pm.expect(s.official_site_url).to.match(/^https?:\\/\\//);",
+                  "});",
+                  "",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Данные школы совпадают со списком",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/{{schoolId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "{{schoolId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"schoolId\")) {",
+                  "    pm.test.skip(\"Школа не найдена в БД, проверки пропущены\", () => {});",
+                  "} else {",
+                  "",
+                  "pm.test(\"Статус 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const s = pm.response.json();",
+                  "const v = k => pm.collectionVariables.get(k);",
+                  "const norm = x => x === null ? \"null\" : x;",
+                  "pm.test(\"name совпадает\", () => pm.expect(s.name).to.eql(v(\"schoolName\")));",
+                  "pm.test(\"short_description совпадает\", () => pm.expect(norm(s.short_description)).to.eql(v(\"schoolShort\")));",
+                  "pm.test(\"official_site_url совпадает\", () => pm.expect(norm(s.official_site_url)).to.eql(v(\"schoolUrl\")));",
+                  "",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Школа по id — негативные",
+      "item": [
+        {
+          "name": "Несуществующий id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/999999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "999999999"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));",
+                  "",
+                  "pm.test(\"В ответе есть status 404\", () => pm.expect(pm.response.json().status).to.eql(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Текст ошибки 404 содержит id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/999999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "999999999"
+              ]
+            },
+            "description": "Известный дефект: по документации (раздел 1.2) ошибка должна приходить в формате ProblemDetail с полем detail. Сейчас бэкенд отдаёт стандартную ошибку Spring без текста. Тест не править, пока бэкенд не исправят."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));",
+                  "",
+                  "pm.test(\"detail: Школа с id=999999999 не найдена\", () => {",
+                  "    pm.expect(String(pm.response.json().detail)).to.include(\"999999999\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "id = 0",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "0"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Отрицательный id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/-1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "-1"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "id не число",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "abc"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Дробный id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/1.5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "1.5"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "id больше максимального Long",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/99999999999999999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "99999999999999999999"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT на публичную школу запрещён",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools/{{schoolId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools",
+                "{{schoolId}}"
+              ]
+            },
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Статус 405\", () => pm.response.to.have.status(405));",
+                  "pm.test(\"Нет ошибки сервера 5xx\", () => pm.expect(pm.response.code).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Время ответа меньше 2 секунд\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://welcome-tpu.ru"
+    },
+    {
+      "key": "schoolId",
+      "value": ""
+    },
+    {
+      "key": "schoolName",
+      "value": ""
+    },
+    {
+      "key": "schoolShort",
+      "value": ""
+    },
+    {
+      "key": "schoolUrl",
+      "value": ""
+    }
+  ]
+}
