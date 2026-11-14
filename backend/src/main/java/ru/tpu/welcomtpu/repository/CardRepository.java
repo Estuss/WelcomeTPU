@@ -6,10 +6,39 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.tpu.welcomtpu.model.Card;
+import ru.tpu.welcomtpu.model.CardType;
 
 import java.util.UUID;
 
 public interface CardRepository extends JpaRepository<Card, UUID> {
+
+    boolean existsByUniqueHash(String uniqueHash);
+
+    java.util.Optional<Card> findByUniqueHash(String uniqueHash);
+
+    /**
+     * Список карточек для админов: черновики и опубликованные, с фильтрами.
+     * type == null / schoolId == null / published == null / search == null - фильтр не применяется.
+     */
+    @Query("""
+            select c from Card c
+            where (:type is null or c.type = :type)
+              and (:schoolId is null or c.school.id = :schoolId)
+              and (:published is null or (:published = true and c.publishedAt is not null)
+                                   or (:published = false and c.publishedAt is null))
+              and (:search is null or lower(c.title) like lower(concat('%', cast(:search as string), '%'))
+                                   or lower(c.content) like lower(concat('%', cast(:search as string), '%')))
+            """)
+    Page<Card> findForAdmin(@Param("type") CardType type,
+                            @Param("schoolId") Long schoolId,
+                            @Param("published") Boolean published,
+                            @Param("search") String search,
+                            Pageable pageable);
+
+    /** При удалении школы карточки остаются как «ТПУ в целом». */
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.data.jpa.repository.Query("update Card c set c.school = null where c.school.id = :schoolId")
+    void unsetSchool(@Param("schoolId") Long schoolId);
 
     /**
      * Публичная подборка: только опубликованные карточки.
