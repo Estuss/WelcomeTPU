@@ -81,4 +81,7 @@ public class Card {
 
     @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private MediaDetail mediaDetails;
+
+    @OneToOne(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
+    private QrDetail qrDetails;
 }

@@ -24,7 +24,7 @@ public class CardsController {
 
     // открытие сессии на время маппинга ленивых связей (open-in-view выключен)
 
-    private static final Set<String> ALLOWED_TYPES = Set.of("FACT", "EVENT", "STATISTIC", "PERSON", "MEDIA");
+    private static final Set<String> ALLOWED_TYPES = Set.of("FACT", "EVENT", "STATISTIC", "PERSON", "MEDIA", "QR");
     private static final int DEFAULT_PAGE_SIZE = 50;
     private static final int MAX_PAGE_SIZE = 1000;
 

@@ -18,8 +18,22 @@ public record CardDto(
         @JsonProperty("event_details") EventDetailsDto eventDetails,
         @JsonProperty("statistic_details") StatisticDetailsDto statisticDetails,
         @JsonProperty("person_details") PersonDetailsDto personDetails,
-        @JsonProperty("media_details") MediaDetailsDto mediaDetails
+        @JsonProperty("media_details") MediaDetailsDto mediaDetails,
+        @JsonProperty("qr_details") QrDetailsDto qrDetails
 ) {
+
+    public record QrDetailsDto(
+            @JsonProperty("target_url") String targetUrl,
+            String caption,
+            String source
+    ) {
+        public static QrDetailsDto from(ru.tpu.welcomtpu.model.QrDetail q) {
+            if (q == null) {
+                return null;
+            }
+            return new QrDetailsDto(q.getTargetUrl(), q.getCaption(), q.getSource());
+        }
+    }
 
     public record SourceDto(Long id, String title, String url) {
         public static SourceDto from(CardSource s) {
