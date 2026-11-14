@@ -278,7 +278,7 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
 | Параметр    | Тип  | Обязательно | Описание                                                                                                 |
 | ----------- | ---- | ----------- | -------------------------------------------------------------------------------------------------------- |
 | `school_id` | long | нет         | Не передан -> карточки "ТПУ в целом" (`school_id IS NULL`). Передан -> карточки школы                    |
-| `type`      | enum | нет         | `FACT`, `EVENT`, `STATISTIC`, `PERSON`, `MEDIA`. Без фильтра — все                                                          |
+| `type`      | enum | нет         | `FACT`, `EVENT`, `STATISTIC`, `PERSON`, `MEDIA`, `QR`. Без фильтра — все                                                    |
 | `seed`      | UUID | нет         | Seed для перемешивания сортировки (см. ниже). Не передан -> бэк генерирует `UUID.randomUUID()` только для этого запроса и возвращает его в заголовке ответа `X-Seed` |
 
 **Сортировка подборки:** не случайная (`random()` PostgreSQL не используется). Порядок строк задаётся детерминированным выражением `md5(id::text || '-' || seed)` — фактически псевдослучайное, но воспроизводимое перемешивание: один и тот же `seed` всегда возвращает одинаковую выборку в одинаковом порядке. Это позволяет клиенту передавать `seed` для стабильной последовательности при пагинации.
@@ -301,7 +301,10 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
       "sources": [ { "id": 1, "title": "Официальный сайт", "url": "https://tpu.ru/history" } ],
       "images": [ { "id": "sha256abc", "url": "/assets/sha256abc.jpg", "alt_text": "Фото корпуса" } ],
       "event_details": null,
-      "statistic_details": null
+      "statistic_details": null,
+      "person_details": null,
+      "media_details": null,
+      "qr_details": null
     },
     {
       "id": "550e8400-e29b-41d4-a716-446655440001",
@@ -500,6 +503,25 @@ Set-Cookie: access_token=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0
   "content": "Общее число студентов",
   "content_format": "PLAIN",
   "statistic_details": { "value": 13500.0000, "unit": "человек", "period": "2024/2025", "source": "Отчёт ТПУ" },
+  "sources": [],
+  "image_ids": []
+}
+```
+
+**Тело (пример `QR`):**
+
+```json
+{
+  "type": "QR",
+  "school_id": null,
+  "title": "Расписание занятий",
+  "content": "Отсканируйте QR-код, чтобы открыть расписание",
+  "content_format": "PLAIN",
+  "qr_details": {
+    "target_url": "https://tpu.ru/schedule",
+    "caption": "Расписание занятий ТПУ",
+    "source": "ТПУ"
+  },
   "sources": [],
   "image_ids": []
 }
