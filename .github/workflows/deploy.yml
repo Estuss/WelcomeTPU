@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Обновить сайт на сервере
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            cd ~/WelcomeTPU
+            git fetch origin main
+            git reset --hard origin/main
+            sed -i 's/"8081:80"/"127.0.0.1:8081:80"/; s/"8080:8080"/"127.0.0.1:8080:8080"/; s/"5432:5432"/"127.0.0.1:5432:5432"/' docker-compose.yml
+            docker compose up -d --build
+            docker image prune -f
