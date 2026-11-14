@@ -24,7 +24,8 @@ public final class CardMapper {
                 CardDto.EventDetailsDto.from(c.getEventDetails()),
                 CardDto.StatisticDetailsDto.from(c.getStatisticDetails()),
                 CardDto.PersonDetailsDto.from(c.getPersonDetails()),
-                CardDto.MediaDetailsDto.from(c.getMediaDetails())
+                CardDto.MediaDetailsDto.from(c.getMediaDetails()),
+                CardDto.QrDetailsDto.from(c.getQrDetails())
         );
     }
 }

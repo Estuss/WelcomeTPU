@@ -8,6 +8,7 @@ Enum card_type {
   STATISTIC
   PERSON
   MEDIA
+  QR
 }
 
 Enum content_format {
@@ -63,6 +64,13 @@ Table statistic_details {
   value numeric(20, 4) [not null]
   unit varchar(50) [not null]
   period varchar(100)
+  source varchar(500)
+}
+
+Table qr_details {
+  card_id uuid [pk, ref: - cards.id]
+  target_url varchar(1024) [not null, note: 'URL, зашитый в QR-код']
+  caption varchar(255)
   source varchar(500)
 }
 

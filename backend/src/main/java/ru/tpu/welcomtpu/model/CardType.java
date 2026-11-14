@@ -4,6 +4,7 @@ public enum CardType {
     FACT,
     EVENT,
     STATISTIC,
-    PERSON,
-    MEDIA
+        PERSON,
+    MEDIA,
+    QR
 }

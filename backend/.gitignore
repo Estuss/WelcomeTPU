@@ -20,6 +20,11 @@ out/
 
 *.log
 
+# секреты и загруженные файлы - вне git
+.secret/
+uploads/
+backend/uploads/
+
 .env
 application-local.properties
 application-local.yml
