@@ -382,6 +382,76 @@ button { font-family: inherit; }
 .page { padding: 40px; }
 .page__link { color: var(--green); }
 
+/* ---------- Анимации ---------- */
+:root { --ease: cubic-bezier(0.22, 0.61, 0.36, 1); }
+
+/* кнопки */
+.back, .round, .school__btn, .about, .state__btn {
+  transition: background-color 0.2s var(--ease), color 0.2s var(--ease),
+    transform 0.2s var(--ease), box-shadow 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+.back:hover { transform: translateX(-3px); }
+.back:active, .state__btn:active { transform: scale(0.96); }
+.round:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18); }
+.round:active:not(:disabled) { transform: scale(0.94); }
+.school__btn svg, .about__more svg { transition: transform 0.25s var(--ease); }
+.school__btn:hover svg, .about:hover .about__more svg { transform: translateX(6px); }
+.school__btn:active { transform: scale(0.98); }
+.about:hover { background: #0b7a39; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(14, 146, 67, 0.3); }
+.about:active { transform: translateY(-1px); }
+.card__link, .school__site, .finish__link { transition: opacity 0.2s var(--ease), border-color 0.2s var(--ease); }
+.card__link:hover, .finish__link:hover { opacity: 0.6; }
+.card__link svg { transition: transform 0.2s var(--ease); }
+.card__link:hover svg { transform: translate(2px, -2px); }
+.school__site:hover { opacity: 0.75; }
+
+/* блоки школ: появление и наведение */
+.school {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s var(--ease) var(--delay, 0ms), transform 0.5s var(--ease) var(--delay, 0ms),
+    box-shadow 0.25s var(--ease);
+}
+.school--visible { opacity: 1; transform: none; }
+.school--visible:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transition-delay: 0ms;
+}
+.school__logo { transition: transform 0.3s var(--ease); }
+.school:hover .school__logo { transform: scale(1.08) rotate(-3deg); }
+
+/* карточки: смена слайда */
+.slide { position: relative; z-index: 1; height: 100%; animation: slide-in-next 0.35s var(--ease); }
+.slide--prev { animation-name: slide-in-prev; }
+@keyframes slide-in-next {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slide-in-prev {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: none; }
+}
+.card { transition: box-shadow 0.25s var(--ease); }
+.card:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1); }
+.finish__title { animation: fade-up 0.5s var(--ease) 0.1s backwards; }
+.finish__link { animation: fade-up 0.5s var(--ease) 0.25s backwards; }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.state { animation: fade-up 0.4s var(--ease); }
+
+/* тем, кто отключил анимации в системе, оставляем всё без движения */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .school { opacity: 1; transform: none; }
+}
+
 /* ---------- Планшеты ---------- */
 @media (max-width: 1199px) {
   .hero__title { font-size: 30px; line-height: 38px; }
