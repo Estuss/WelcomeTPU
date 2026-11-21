@@ -2,17 +2,18 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Card, { FinishCard } from '../components/Card'
 import { ArrowLeft, ArrowRight } from '../components/Icons'
-import { getCards } from '../data/cards'
-import { getSchool } from '../data/schools'
+import { getCards } from '../api/cards'
+import { getSchool } from '../api/schools'
 
 function CardsPage() {
   const { schoolId } = useParams()
   const navigate = useNavigate()
-  const school = schoolId ? getSchool(schoolId) : null
-  const title = school ? school.shortName : 'О ТПУ'
+  const [schoolName, setSchoolName] = useState('')
+  const title = schoolId ? schoolName : 'О ТПУ'
 
   const [cards, setCards] = useState([])
   const [status, setStatus] = useState('loading') // loading | error | ready
+  const [error, setError] = useState('')
   const [index, setIndex] = useState(0)
   const touchStart = useRef(null)
   const [dir, setDir] = useState('next') // куда листаем, для анимации
@@ -25,7 +26,17 @@ function CardsPage() {
         setCards(data)
         setStatus('ready')
       })
-      .catch(() => setStatus('error'))
+      .catch((e) => {
+        setError(e.message)
+        setStatus('error')
+      })
+    // название школы для заголовка; если не загрузилось, заголовок просто будет пустым
+    setSchoolName('')
+    if (schoolId) {
+      getSchool(schoolId)
+        .then((s) => setSchoolName(s.name))
+        .catch(() => {})
+    }
   }, [schoolId])
 
   useEffect(() => {
@@ -76,7 +87,7 @@ function CardsPage() {
   } else if (status === 'error') {
     content = (
       <div className="state">
-        <p>Не удалось загрузить карточки</p>
+        <p>Не удалось загрузить карточки. {error}</p>
         <button className="state__btn" onClick={load}>Попробовать ещё раз</button>
       </div>
     )
