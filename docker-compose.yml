@@ -35,6 +35,10 @@ services:
       # TODO: заменить на none + Flyway-миграции
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
+      # секреты OAuth монтируются томом, путь импорта переопределяем
+      SPRING_CONFIG_IMPORT: optional:file:/opt/secret/backend-oauth.properties
+    volumes:
+      - ./.secret:/opt/secret:ro
     ports:
       - "8080:8080"
     healthcheck:
