@@ -41,8 +41,8 @@ function HomePage() {
       <section className="schools">
         <h2 className="schools__title">Наши школы</h2>
         <div className="schools__grid">
-          {schools.map((s) => (
-            <SchoolCard key={s.id} school={s} />
+          {schools.map((s, i) => (
+            <SchoolCard key={s.id} school={s} index={i} />
           ))}
         </div>
       </section>

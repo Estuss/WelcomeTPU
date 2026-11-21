@@ -15,6 +15,7 @@ function CardsPage() {
   const [status, setStatus] = useState('loading') // loading | error | ready
   const [index, setIndex] = useState(0)
   const touchStart = useRef(null)
+  const [dir, setDir] = useState('next') // куда листаем, для анимации
 
   const load = useCallback(() => {
     setStatus('loading')
@@ -35,8 +36,14 @@ function CardsPage() {
   const total = cards.length + 1
   const isFinish = index === cards.length
 
-  const next = useCallback(() => setIndex((i) => Math.min(i + 1, total - 1)), [total])
-  const prev = useCallback(() => setIndex((i) => Math.max(i - 1, 0)), [])
+  const next = useCallback(() => {
+    setDir('next')
+    setIndex((i) => Math.min(i + 1, total - 1))
+  }, [total])
+  const prev = useCallback(() => {
+    setDir('prev')
+    setIndex((i) => Math.max(i - 1, 0))
+  }, [])
 
   useEffect(() => {
     if (status !== 'ready') return
@@ -102,7 +109,9 @@ function CardsPage() {
               <ArrowLeft size={28} />
             </button>
             <div className={`stack${isFinish ? ' stack--finish' : ''}`}>
-              {isFinish ? <FinishCard /> : <Card key={cards[index].id} card={cards[index]} />}
+              <div key={index} className={`slide slide--${dir}`}>
+                {isFinish ? <FinishCard /> : <Card card={cards[index]} />}
+              </div>
             </div>
             <button
               className={`round round--next${isFinish ? ' round--filled' : ''}`}
