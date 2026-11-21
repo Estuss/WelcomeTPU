@@ -36,7 +36,7 @@ function SchoolCard({ school, index = 0 }) {
       <a className="school__site" href={school.siteUrl} target="_blank" rel="noreferrer">
         Сайт школы
       </a>
-      <img className="school__logo" src={school.logo} alt="" />
+      {school.logo && <img className="school__logo" src={school.logo} alt="" />}
       <Link className="school__btn" to={`/cards/${school.id}`}>
         <span>К карточкам школы</span>
         <ArrowRight size={28} />

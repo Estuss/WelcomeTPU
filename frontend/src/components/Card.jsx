@@ -7,6 +7,9 @@ const LABELS = {
   HISTORY: 'История',
   EVENT: 'Мероприятие',
   STATISTIC: 'Статистика',
+  PERSON: 'Персона',
+  MEDIA: 'Медиа',
+  QR: 'QR-код',
 }
 
 function ExtLink({ href, children }) {

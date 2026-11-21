@@ -130,6 +130,7 @@ button { font-family: inherit; }
   line-height: 44px;
   font-weight: 700;
 }
+.schools__state { padding: 40px 0; text-align: center; font-size: 18px; }
 .schools__grid {
   display: flex;
   flex-wrap: wrap;
@@ -212,7 +213,15 @@ button { font-family: inherit; }
   color: #000;
 }
 .back:hover { background: #fff; }
-.viewer__title { font-size: 20px; font-weight: 700; text-align: center; }
+.viewer__title {
+  max-width: 60vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
 .viewer__count { justify-self: end; font-size: 16px; }
 .viewer__count--mobile { display: none; }
 
