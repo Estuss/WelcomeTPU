@@ -17,7 +17,8 @@ mvn spring-boot:run        # запуск (требует запущенного
 | `controller/` | Публичные: `CardsController`, `SchoolController`. Админские: `AdminCardsController` (CRUD карточек), `AdminCardsListController` (список с фильтрами), `AdminSchoolsController` (CRUD школ), `CardImagesController` (загрузка картинок) |
 | `auth/` | OAuth ТПУ: `AuthController`, `TpuOAuthService`, `JwtService`, `AdminAuthFilter` |
 | `model/`, `repository/`, `dto/` | JPA-сущности, репозитории, DTO |
-| `db/migration/` | Flyway: V1 схема, V2/V3 сиды, V4 — `qr_details` (тип карточки QR) |
+| `db/migration/` | Flyway: V1 схема, V2 школы, V3 карточки из `cards.txt` (генерируется `scripts/make_migration.py`), V4 — `qr_details` (тип карточки QR) |
+| `scripts/` | Утилиты: `add_cards.py` (заливка карточек через API), `make_migration.py` (генерация миграции из `cards.json`), `parse_cards_txt.py` (`cards.txt` → `cards.json`) |
 | `config/WebConfig.java` | Раздача загруженных файлов `/assets/**` → `./uploads/` |
 
 ## Типы карточек
@@ -28,7 +29,7 @@ mvn spring-boot:run        # запуск (требует запущенного
 
 ## API
 
-Полная спецификация — в файле `REST API для Welcome ТПУ.md`.
+Полная спецификация — в файле `docs/REST API для Welcome ТПУ.md`.
 
 - Публичные: `GET /api/v1/schools`, `GET /api/v1/schools/{id}`, `GET /api/v1/cards` (постранично, seed-перемешивание, заголовок `X-Seed`), `GET /api/v1/cards/{id}`
 - Админские (нужна JWT-cookie `access_token`, HttpOnly, срок 1 час):

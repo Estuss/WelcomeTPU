@@ -1,0 +1,42 @@
+[
+  {
+    "type": "FACT",
+    "school_id": null,
+    "title": "ТПУ основан в 1896 году",
+    "content": "Томский политехнический университет — первый технический вуз Сибири.",
+    "content_format": "PLAIN",
+    "published_at": "2025-01-15T10:00:00Z",
+    "sources": [{ "title": "ТПУ", "url": "https://tpu.ru/about/history" }]
+  },
+  {
+    "type": "EVENT",
+    "school_id": null,
+    "title": "День открытых дверей",
+    "content": "Приглашаем абитуриентов на день открытых дверей!",
+    "content_format": "MARKDOWN",
+    "event_details": {
+      "start_date": "2026-06-15",
+      "end_date": null,
+      "start_time": "10:00:00",
+      "end_time": "14:00:00",
+      "location": "г. Томск, пр. Ленина, 30",
+      "details_url": "https://tpu.ru/events/123"
+    },
+    "published_at": null,
+    "sources": []
+  },
+  {
+    "type": "QR",
+    "school_id": null,
+    "title": "Расписание занятий",
+    "content": "Отсканируйте QR-код, чтобы открыть расписание",
+    "content_format": "PLAIN",
+    "qr_details": {
+      "target_url": "https://tpu.ru/schedule",
+      "caption": "Расписание занятий ТПУ",
+      "source": "ТПУ"
+    },
+    "published_at": "2025-01-15T10:00:00Z",
+    "sources": []
+  }
+]
