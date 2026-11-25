@@ -12,24 +12,28 @@ import chem from '../assets/logos/chem.png'
 import social from '../assets/logos/social.png'
 
 // Если у школы на сервере ещё не загружен логотип, берём локальный по названию.
-const LOCAL_LOGOS = [
-  ['Бизнес', business],
-  ['Интеллектуальные энергетические', ies],
-  ['информационных технологий', itr],
-  ['неразрушающего', ndt],
-  ['новых производственных', npt],
-  ['природных ресурсов', resources],
-  ['энергетики', energy],
-  ['ядерных', nuclear],
-  ['физики', physics],
-  ['химических', chem],
-  ['общественных', social],
+// [слово в названии, логотип, сокращение, цвет бейджа в админке]
+const KNOWN = [
+  ['Бизнес', business, 'БШ', '#26b6d0'],
+  ['Интеллектуальные энергетические', ies, 'ИШИЭС', '#3b7499'],
+  ['информационных технологий', itr, 'ИШИТР', '#3b7499'],
+  ['неразрушающего', ndt, 'ИШНКБ', '#1fc5e8'],
+  ['новых производственных', npt, 'ИШНПТ', '#17a595'],
+  ['природных ресурсов', resources, 'ИШПР', '#8cd21a'],
+  ['энергетики', energy, 'ИШЭ', '#ffb400'],
+  ['ядерных', nuclear, 'ИЯТШ', '#2b9bff'],
+  ['физики', physics, 'ИШФВП', '#ef5350'],
+  ['химических', chem, 'ИШХБМТ', '#a468d6'],
+  ['общественных', social, 'ШОН', '#ff9a2e'],
 ]
+
+function findKnown(name) {
+  return KNOWN.find(([word]) => name.includes(word))
+}
 
 function logoFor(dto) {
   if (dto.icon?.url) return dto.icon.url
-  const found = LOCAL_LOGOS.find(([word]) => dto.name.includes(word))
-  return found ? found[1] : null
+  return findKnown(dto.name)?.[1] ?? null
 }
 
 function toSchool(dto) {
@@ -39,6 +43,8 @@ function toSchool(dto) {
     description: dto.short_description,
     siteUrl: dto.official_site_url,
     logo: logoFor(dto),
+    shortName: findKnown(dto.name)?.[2] ?? 'ИШ',
+    color: findKnown(dto.name)?.[3] ?? '#3b7499',
   }
 }
 
