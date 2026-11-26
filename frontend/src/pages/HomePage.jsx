@@ -33,10 +33,9 @@ function HomePage() {
   return (
     <>
       <section className="hero">
-        <picture>
-          <source media="(max-width: 767px)" srcSet={swirlsMobile} />
-          <img className="hero__swirls" src={swirls} alt="" />
-        </picture>
+        <div className="hero__sw hero__sw--l" style={{ backgroundImage: `url(${swirls})` }} />
+        <div className="hero__sw hero__sw--r" style={{ backgroundImage: `url(${swirls})` }} />
+        <img className="hero__swirls" src={swirlsMobile} alt="" />
         <div className="hero__photo-mobile" style={{ backgroundImage: `url(${photo})` }} />
         <img className="hero__photo" src={photoBlob} alt="Главный корпус ТПУ" />
         <div className="hero__content">
