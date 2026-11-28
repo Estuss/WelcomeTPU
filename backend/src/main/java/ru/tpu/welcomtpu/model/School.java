@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "schools")
@@ -36,6 +38,12 @@ public class School {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_asset_id")
     private Asset icon;
+
+    /** Фотографии школы (файлы в assets), порядок — по position. */
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position asc")
+    @Builder.Default
+    private List<SchoolAsset> photos = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
