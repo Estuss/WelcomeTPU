@@ -51,7 +51,7 @@ public class SchoolController {
      */
     @GetMapping("/{id}")
     public SchoolDto get(@PathVariable Long id) {
-        return schoolRepository.findById(id)
+        return schoolRepository.findWithPhotosById(id)
                 .map(SchoolDto::from)
                 .orElseThrow(() -> notFound(id));
     }
